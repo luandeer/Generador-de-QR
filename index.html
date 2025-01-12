@@ -20,7 +20,7 @@
 
       <div class="border-4 border-black p-6 bg-[#FFFDF8] shadow-[8px_8px_0_0_#000]">
         <form onsubmit="return false;" class="space-y-4">
-          <div>
+          <div class="mb-1">
             <label for="texto" class="block text-sm font-bold text-gray-700 mb-1 font-mono">
               Ingresar URL o texto
             </label>
@@ -34,9 +34,14 @@
           <button 
             type="submit" 
             onclick="generarQR()"
-            class="w-full bg-black text-white font-bold py-2 px-4 border-2 border-black hover:bg-slate-800 hover:text-white transition-colors duration-300 font-mono"
+            class="w-full button !text-[16px] !font-semibold !font-mono"
           >
-            Generar QR 
+          <span class="shadow"></span>
+          <span class="edge"></span>
+          <div class="front">
+            <span>Generar QR </span>
+          </div>
+            
           </button>
         </form>
         <div class="mt-6 p-4 border-2 border-black flex items-center justify-center bg-[#FFFDF8] h-[250px] ">
@@ -53,20 +58,19 @@
   </div>
   
   <script>
-    // Actualizar el año automáticamente
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-
+    let confetiActivo = false; // Variable para controlar el bloqueo
+  
     // Generar QR y lanzar confeti
     function generarQR() {
       const texto = document.getElementById('texto').value;
       const contenedor = document.getElementById('qrcode');
       contenedor.innerHTML = '';
-
+  
       if (texto.trim() === '') {
         alert('Por favor, ingresa un texto o URL válido.');
         return;
       }
-
+  
       new QRCode(contenedor, {
         text: texto,
         width: 200,
@@ -75,26 +79,30 @@
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
-
-      lanzarConfeti();
+  
+      // Llamar a lanzarConfeti con control de bloqueo
+      if (!confetiActivo) {
+        lanzarConfeti();
+      }
     }
-
+  
     function lanzarConfeti() {
+      confetiActivo = true; // Activar el bloqueo
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
       });
-
-      const duration = 2000;
+  
+      const duration = 2000; // Duración de la animación en ms
       const animationEnd = Date.now() + duration;
-
+  
       const interval = setInterval(() => {
         if (Date.now() > animationEnd) {
           clearInterval(interval);
           return;
         }
-
+  
         confetti({
           particleCount: 50,
           spread: 90,
@@ -105,7 +113,13 @@
           },
         });
       }, 250);
+  
+      // Restablecer el bloqueo después de la duración del confeti
+      setTimeout(() => {
+        confetiActivo = false;
+      }, duration + 500); // Un pequeño margen adicional para garantizar la finalización
     }
   </script>
+  
 </body>
 </html>
