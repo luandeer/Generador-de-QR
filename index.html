@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Nerd</title>
+  <link rel="stylesheet" href="css/output.css" />
+  <script src="qrcodejs-master/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="min-h-screen bg-[#FFFDF8] flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-md">
+      <header class="text-center mb-6">
+        <div class="max-w-[150px] w-full mx-auto mb-3">
+          <img src="img/nerd.svg" class="object-cover w-full h-full" alt="">
+        </div>
+        <p class="text-xl text-gray-700 font-mono">Generador de código QR</p>
+      </header>
+
+      <div class="border-4 border-black p-6 bg-[#FFFDF8] shadow-[8px_8px_0_0_#000]">
+        <form onsubmit="return false;" class="space-y-4">
+          <div>
+            <label for="texto" class="block text-sm font-bold text-gray-700 mb-1 font-mono">
+              Ingresar URL o texto
+            </label>
+            <input
+              type="text" id="texto"
+              placeholder="https://example.com"
+              required
+              class="w-full px-3 py-2 border-2 border-black font-mono bg-[#FFFDF8] text-black placeholder-gray-500 focus:outline-none focus:bg-[#FFFDF8] focus:ring-2 focus:ring-black"
+            />
+          </div>
+          <button 
+            type="submit" 
+            onclick="generarQR()"
+            class="w-full bg-black text-white font-bold py-2 px-4 border-2 border-black hover:bg-slate-800 hover:text-white transition-colors duration-300 font-mono"
+          >
+            Generar QR 
+          </button>
+        </form>
+        <div class="mt-6 p-4 border-2 border-black flex items-center justify-center bg-[#FFFDF8] h-[250px] ">
+          <div id="qrcode" >
+            <p class="text-gray-500 font-mono text-center">Tu código QR aparecerá aquí</p>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-8 text-center text-gray-600 font-mono">
+        <p>© <span id="currentYear">2024</span> Nerd. Todos los derechos reservados.</p>
+      </footer>
+    </div>
+  </div>
+  
+  <script>
+    // Actualizar el año automáticamente
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Generar QR y lanzar confeti
+    function generarQR() {
+      const texto = document.getElementById('texto').value;
+      const contenedor = document.getElementById('qrcode');
+      contenedor.innerHTML = '';
+
+      if (texto.trim() === '') {
+        alert('Por favor, ingresa un texto o URL válido.');
+        return;
+      }
+
+      new QRCode(contenedor, {
+        text: texto,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      lanzarConfeti();
+    }
+
+    function lanzarConfeti() {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+
+      const duration = 2000;
+      const animationEnd = Date.now() + duration;
+
+      const interval = setInterval(() => {
+        if (Date.now() > animationEnd) {
+          clearInterval(interval);
+          return;
+        }
+
+        confetti({
+          particleCount: 50,
+          spread: 90,
+          startVelocity: 30,
+          origin: {
+            x: Math.random(),
+            y: Math.random() - 0.2
+          },
+        });
+      }, 250);
+    }
+  </script>
+</body>
+</html>

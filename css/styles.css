@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Personalizar el estilo cuando el navegador autocompleta */
+input:-webkit-autofill {
+	background-color: #fffdf8 !important; /* Color de fondo personalizado */
+	color: black !important; /* Color del texto */
+	transition: background-color 5000s ease-in-out 0s; /* Evita parpadeos */
+}
+
+/* Para otros navegadores (no WebKit) */
+input:-moz-autofill {
+	background-color: #fffdf8 !important;
+	color: black !important;
+}
